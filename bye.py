@@ -5,16 +5,6 @@ import torch
 import hashlib
 
 
-
-def check_credentials():
-    password = st.sidebar.text_input("Enter password", value="", type="password")
-    password_hash = hashlib.sha256(password.encode()).hexdigest()
-    if password_hash != PASSWORD_HASH:
-        st.sidebar.error("Invalid password. Access denied.")
-        return False
-    return True
-
-
 # Load the Longformer model and tokenizer
 longformer_model_name = 'allenai/longformer-base-4096'
 longformer_tokenizer = LongformerTokenizer.from_pretrained(longformer_model_name)
@@ -24,7 +14,8 @@ longformer_model = LongformerModel.from_pretrained(longformer_model_name)
 medbert_model_name = 'dmis-lab/biobert-v1.1'
 medbert_tokenizer = AutoTokenizer.from_pretrained(medbert_model_name)
 medbert_model = AutoModelForSequenceClassification.from_pretrained(medbert_model_name)
-
+# Set password for the app
+PASSWORD_HASH = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"
 # Define the PICOS criteria and context
 picos_criteria = {
     'Population': [],
@@ -35,8 +26,7 @@ picos_criteria = {
 }
 context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not for SLR and relevancy, be very strict."
 
-# Set password for the app
-PASSWORD_HASH = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"
+
 
 # Streamlit app
 def main():
@@ -151,5 +141,14 @@ if st.button("Evaluate") and pdf_file is not None:
     st.subheader("Result")
     st.write("Decision:", decision)
     st.write("Average Acceptance Probability:", average_accept_probability)
+    
+def check_credentials():
+    password = st.sidebar.text_input("Enter password", value="", type="password")
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    if password_hash != PASSWORD_HASH:
+        st.sidebar.error("Invalid password. Access denied.")
+        return False
+    return True
+
 if __name__ == '__main__':
     main()
