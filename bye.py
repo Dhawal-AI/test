@@ -2,7 +2,7 @@ from PyPDF2 import PdfReader
 import streamlit as st
 from transformers import LongformerTokenizer, LongformerModel, AutoTokenizer, AutoModelForSequenceClassification
 import torch
-import streamlit_secrets as secrets
+import hashlib
 
 # Load the Longformer model and tokenizer
 longformer_model_name = 'allenai/longformer-base-4096'
@@ -25,21 +25,15 @@ picos_criteria = {
 context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not."
 
 # Set password for the app
-app_password = secrets.get("app_password")
-
-# Check if password is provided
-if not app_password:
-    # Ask user to set password
-    app_password = st.text_input("Set an app password", type="password")
-    # Save the password
-    secrets.set("app_password", app_password)
+app_password = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"  # Set your desired password here
 
 # Password verification
-if app_password:
-    password_input = st.text_input("Enter app password", type="password")
-    if password_input != app_password:
-        st.error("Invalid password. Please try again.")
-        st.stop()
+password_input = st.text_input("Enter app password", type="password")
+hashed_input = hashlib.sha256(password_input.encode()).hexdigest()
+
+if hashed_input != hashlib.sha256(app_password.encode()).hexdigest():
+    st.error("Invalid password. Please try again.")
+    st.stop()
 
 # Streamlit app
 st.title("Research Paper Evaluation")
@@ -146,4 +140,4 @@ if st.button("Evaluate") and pdf_file is not None:
     # Display the result
     st.subheader("Result")
     st.write("Decision:", decision)
-    st.write("Average Acceptance Probability:", average_accept_probability)
+    st.write("Probability:", average_accept_probability)
