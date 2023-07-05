@@ -4,6 +4,17 @@ from transformers import LongformerTokenizer, LongformerModel, AutoTokenizer, Au
 import torch
 import hashlib
 
+
+
+def check_credentials():
+    password = st.sidebar.text_input("Enter password", value="", type="password")
+    password_hash = hashlib.sha256(password.encode()).hexdigest()
+    if password_hash != PASSWORD_HASH:
+        st.sidebar.error("Invalid password. Access denied.")
+        return False
+    return True
+
+
 # Load the Longformer model and tokenizer
 longformer_model_name = 'allenai/longformer-base-4096'
 longformer_tokenizer = LongformerTokenizer.from_pretrained(longformer_model_name)
@@ -25,17 +36,12 @@ picos_criteria = {
 context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not."
 
 # Set password for the app
-app_password = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"  # Set your desired password here
-
-# Password verification
-password_input = st.text_input("Enter app password", type="password")
-hashed_input = hashlib.sha256(password_input.encode()).hexdigest()
-
-if hashed_input != hashlib.sha256(app_password.encode()).hexdigest():
-    st.error("Invalid password. Please try again.")
-    st.stop()
+PASSWORD_HASH = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"
 
 # Streamlit app
+    # Check if the user is authorized to access the app
+if not check_credentials():
+    return
 st.title("Research Paper Evaluation")
 
 # Input for PICO criteria
