@@ -39,7 +39,7 @@ context = "Stick to the PICOS criteria of population, intervention, comparison, 
 PASSWORD_HASH = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"
 
 # Streamlit app
-    # Check if the user is authorized to access the app
+# Check if the user is authorized to access the app
 if not check_credentials():
     return
 st.title("Research Paper Evaluation")
