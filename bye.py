@@ -134,7 +134,6 @@ if st.button("Evaluate") and pdf_file is not None:
         # Update progress bar
         progress_text = f"Chunk {i+1}/{len(chunks)}"
         progress_bar.progress((i + 1) / len(chunks))
-        st.text(progress_text)
 
     # Calculate the average acceptance probability across all chunks
     average_accept_probability = overall_accept_probability / len(chunks)
