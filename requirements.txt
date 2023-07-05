@@ -4,3 +4,4 @@ streamlit==1.10.0
 scikit_learn==1.2.2
 transformers
 PyPDF2
+torch
