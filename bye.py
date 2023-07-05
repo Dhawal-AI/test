@@ -60,8 +60,14 @@ if st.button("Evaluate") and pdf_file is not None:
     # Initialize variables to store overall results
     overall_accept_probability = 0.0
 
+    # Progress bar
+    progress_bar = st.progress(0)
+
     # Process each chunk separately
-    for chunk in chunks:
+    for i, chunk in enumerate(chunks):
+        # Update progress bar
+        progress_bar.progress((i + 1) / len(chunks))
+
         # Encode the chunk using Longformer tokenizer
         encoding = longformer_tokenizer.encode_plus(
             chunk,
@@ -120,9 +126,7 @@ if st.button("Evaluate") and pdf_file is not None:
     else:
         decision = "Reject"
 
-    # Print the decision and overall PICO criteria evaluation
+    # Display the result
     st.subheader("Result")
     st.write("Decision:", decision)
-    st.write("Average Acceptance Probability:", average_accept_probability)
-
-
+    st.write("Probability:", average_accept_probability)
