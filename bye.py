@@ -4,7 +4,6 @@ from transformers import LongformerTokenizer, LongformerModel, AutoTokenizer, Au
 import torch
 import hashlib
 
-
 # Load the Longformer model and tokenizer
 longformer_model_name = 'allenai/longformer-base-4096'
 longformer_tokenizer = LongformerTokenizer.from_pretrained(longformer_model_name)
@@ -14,8 +13,7 @@ longformer_model = LongformerModel.from_pretrained(longformer_model_name)
 medbert_model_name = 'dmis-lab/biobert-v1.1'
 medbert_tokenizer = AutoTokenizer.from_pretrained(medbert_model_name)
 medbert_model = AutoModelForSequenceClassification.from_pretrained(medbert_model_name)
-# Set password for the app
-PASSWORD_HASH = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"
+
 # Define the PICOS criteria and context
 picos_criteria = {
     'Population': [],
@@ -24,15 +22,11 @@ picos_criteria = {
     'Outcome': [],
     'Study_design': []
 }
-context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not for SLR and relevancy, be very strict."
+context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not."
 
-
+# Set password for the app
 
 # Streamlit app
-def main():
-    # Check if the user is authorized to access the app
-    if not check_credentials():
-        return
 st.title("Research Paper Evaluation")
 
 # Input for PICO criteria
@@ -129,7 +123,7 @@ if st.button("Evaluate") and pdf_file is not None:
     average_accept_probability = overall_accept_probability / len(chunks)
 
     # Define the acceptance threshold
-    threshold = 0.6
+    threshold = 0.5
 
     # Make the accept/reject decision based on the average probability
     if average_accept_probability >= threshold:
@@ -140,15 +134,4 @@ if st.button("Evaluate") and pdf_file is not None:
     # Display the result
     st.subheader("Result")
     st.write("Decision:", decision)
-    st.write("Average Acceptance Probability:", average_accept_probability)
-    
-def check_credentials():
-    password = st.sidebar.text_input("Enter password", value="", type="password")
-    password_hash = hashlib.sha256(password.encode()).hexdigest()
-    if password_hash != PASSWORD_HASH:
-        st.sidebar.error("Invalid password. Access denied.")
-        return False
-    return True
-
-if __name__ == '__main__':
-    main()
+    st.write("Probability:", average_accept_probability)
