@@ -24,16 +24,6 @@ picos_criteria = {
 }
 context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not."
 
-# Set password for the app
-app_password = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"  # Set your desired password here
-
-# Password verification
-password_input = st.text_input("Enter app password", type="password")
-hashed_input = hashlib.sha256(password_input.encode()).hexdigest()
-
-if hashed_input != hashlib.sha256(app_password.encode()).hexdigest():
-    st.error("Invalid password. Please try again.")
-    st.stop()
 
 # Streamlit app
 st.title("Research Paper Evaluation")
