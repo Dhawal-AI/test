@@ -2,6 +2,7 @@ from PyPDF2 import PdfReader
 import streamlit as st
 from transformers import LongformerTokenizer, LongformerModel, AutoTokenizer, AutoModelForSequenceClassification
 import torch
+from streamlit_protect import protect
 
 # Load the Longformer model and tokenizer
 longformer_model_name = 'allenai/longformer-base-4096'
@@ -24,6 +25,10 @@ picos_criteria = {
 context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not."
 
 # Streamlit app
+app_password = "onlinemodel"
+
+protect(password=app_password)
+
 st.title("Research Paper Evaluation")
 
 # Input for PICO criteria
@@ -60,14 +65,8 @@ if st.button("Evaluate") and pdf_file is not None:
     # Initialize variables to store overall results
     overall_accept_probability = 0.0
 
-    # Progress bar
-    progress_bar = st.progress(0)
-
     # Process each chunk separately
     for i, chunk in enumerate(chunks):
-        # Update progress bar
-        progress_bar.progress((i + 1) / len(chunks))
-
         # Encode the chunk using Longformer tokenizer
         encoding = longformer_tokenizer.encode_plus(
             chunk,
@@ -113,6 +112,11 @@ if st.button("Evaluate") and pdf_file is not None:
 
         # Add current chunk's results to overall results
         overall_accept_probability += accept_probability
+
+        # Update progress bar
+        progress_text = f"Chunk {i+1}/{len(chunks)}"
+        st.progress((i + 1) / len(chunks))
+        st.text(progress_text)
 
     # Calculate the average acceptance probability across all chunks
     average_accept_probability = overall_accept_probability / len(chunks)
