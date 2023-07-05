@@ -2,7 +2,7 @@ from PyPDF2 import PdfReader
 import streamlit as st
 from transformers import LongformerTokenizer, LongformerModel, AutoTokenizer, AutoModelForSequenceClassification
 import torch
-from streamlit_protect import protect
+import streamlit_secrets as secrets
 
 # Load the Longformer model and tokenizer
 longformer_model_name = 'allenai/longformer-base-4096'
@@ -24,11 +24,24 @@ picos_criteria = {
 }
 context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not."
 
+# Set password for the app
+app_password = secrets.get("app_password")
+
+# Check if password is provided
+if not app_password:
+    # Ask user to set password
+    app_password = st.text_input("Set an app password", type="password")
+    # Save the password
+    secrets.set("app_password", app_password)
+
+# Password verification
+if app_password:
+    password_input = st.text_input("Enter app password", type="password")
+    if password_input != app_password:
+        st.error("Invalid password. Please try again.")
+        st.stop()
+
 # Streamlit app
-app_password = "onlinemodel"
-
-protect(password=app_password)
-
 st.title("Research Paper Evaluation")
 
 # Input for PICO criteria
@@ -133,4 +146,4 @@ if st.button("Evaluate") and pdf_file is not None:
     # Display the result
     st.subheader("Result")
     st.write("Decision:", decision)
-    st.write("Probability:", average_accept_probability)
+    st.write("Average Acceptance Probability:", average_accept_probability)
