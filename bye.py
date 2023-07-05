@@ -123,7 +123,7 @@ if st.button("Evaluate") and pdf_file is not None:
     average_accept_probability = overall_accept_probability / len(chunks)
 
     # Define the acceptance threshold
-    threshold = 0.5
+    threshold = 0.6
 
     # Make the accept/reject decision based on the average probability
     if average_accept_probability >= threshold:
