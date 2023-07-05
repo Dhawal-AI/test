@@ -33,7 +33,7 @@ picos_criteria = {
     'Outcome': [],
     'Study_design': []
 }
-context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not."
+context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not for SLR and relevancy, be very strict."
 
 # Set password for the app
 PASSWORD_HASH = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"
@@ -139,7 +139,7 @@ if st.button("Evaluate") and pdf_file is not None:
     average_accept_probability = overall_accept_probability / len(chunks)
 
     # Define the acceptance threshold
-    threshold = 0.5
+    threshold = 0.6
 
     # Make the accept/reject decision based on the average probability
     if average_accept_probability >= threshold:
