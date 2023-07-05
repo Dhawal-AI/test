@@ -24,6 +24,16 @@ picos_criteria = {
 }
 context = "Stick to the PICOS criteria of population, intervention, comparison, outcome, and study design to decide whether the paper should be accepted or not."
 
+# Set password for the app
+app_password = "c0a16a726686f7c44f99536443e6b942ba4cd80e5bd81a739ab63698a4368302"  # Set your desired password here
+
+# Password verification
+password_input = st.text_input("Enter app password", type="password")
+hashed_input = hashlib.sha256(password_input.encode()).hexdigest()
+
+if hashed_input != hashlib.sha256(app_password.encode()).hexdigest():
+    st.error("Invalid password. Please try again.")
+    st.stop()
 
 # Streamlit app
 st.title("Research Paper Evaluation")
@@ -62,6 +72,9 @@ if st.button("Evaluate") and pdf_file is not None:
     # Initialize variables to store overall results
     overall_accept_probability = 0.0
 
+    # Initialize progress bar
+    progress_bar = st.progress(0)
+
     # Process each chunk separately
     for i, chunk in enumerate(chunks):
         # Encode the chunk using Longformer tokenizer
@@ -71,6 +84,7 @@ if st.button("Evaluate") and pdf_file is not None:
             max_length=4096,
             padding='max_length',
             truncation=True,
+            return_attention_mask=True,
             return_tensors='pt'
         )
         input_ids = encoding['input_ids']
@@ -112,7 +126,7 @@ if st.button("Evaluate") and pdf_file is not None:
 
         # Update progress bar
         progress_text = f"Chunk {i+1}/{len(chunks)}"
-        st.progress((i + 1) / len(chunks))
+        progress_bar.progress((i + 1) / len(chunks))
         st.text(progress_text)
 
     # Calculate the average acceptance probability across all chunks
@@ -130,4 +144,4 @@ if st.button("Evaluate") and pdf_file is not None:
     # Display the result
     st.subheader("Result")
     st.write("Decision:", decision)
-    st.write("Probability:", average_accept_probability)
+    st.write("Average Acceptance Probability:", average_accept_probability)
