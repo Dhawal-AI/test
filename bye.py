@@ -27,6 +27,13 @@ context = "Stick to the PICOS criteria of population, intervention, comparison, 
 # Set password for the app
 
 # Streamlit app
+st.image(
+    'Eversana_Logo_H_RGB.png',
+    width=500,
+)
+    
+CURRENT_THEME = "blue"
+IS_DARK_THEME = True
 st.title("Research Paper Evaluation")
 
 # Input for PICO criteria
