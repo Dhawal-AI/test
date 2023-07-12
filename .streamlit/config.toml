@@ -1,7 +1,7 @@
 [theme]
 primaryColor = "#E694FF"
 backgroundColor = "#FFFFFF"
-secondaryBackgroundColor = "#007398"
+secondaryBackgroundColor = "#5EA4FF"
 textColor = "#000000"
-font = "ariel"
+font = "arial"
 
